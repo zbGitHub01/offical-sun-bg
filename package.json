@@ -5,8 +5,7 @@
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build:prod": "vue-cli-service build",
-    "build:test": "vue-cli-service build --mode staging",
+    "build": "vue-cli-service build",
     "preview": "node build/index.js --preview",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",
     "lint": "eslint --ext .js,.vue src",
@@ -21,6 +20,7 @@
     "dayjs": "^1.10.4",
     "driver.js": "0.9.5",
     "dropzone": "5.5.1",
+    "echarts": "^5.0.1",
     "element-ui": "2.13.2",
     "file-saver": "2.0.1",
     "fuse.js": "3.4.4",
@@ -43,12 +43,13 @@
     "vue-i18n": "7.3.2",
     "vue-router": "3.0.2",
     "vue-splitpane": "1.0.4",
-    "vue-template-compiler": "^2.6.12",
+    "vue-template-compiler": "2.6.12",
     "vuedraggable": "2.20.0",
     "vuex": "3.1.0",
     "xlsx": "0.14.1"
   },
   "devDependencies": {
+    "@babel/runtime": "^7.14.6",
     "@vue/cli-plugin-babel": "4.4.4",
     "@vue/cli-plugin-eslint": "4.4.4",
     "@vue/cli-plugin-unit-jest": "4.4.4",

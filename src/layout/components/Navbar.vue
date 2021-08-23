@@ -1,40 +1,39 @@
 <template>
   <div class="navbar">
-    <hamburger
-      id="hamburger-container"
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
+    <hamburger id="hamburger-container"
+               :is-active="sidebar.opened"
+               class="hamburger-container"
+               @toggleClick="toggleSideBar" />
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb id="breadcrumb-container"
+                class="breadcrumb-container" />
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <search id="header-search"
+                class="right-menu-item" />
         <error-log class="errLog-container right-menu-item hover-effect" />
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
-        <popover class="right-menu-item hover-effect" />
-
+        <screenfull id="screenfull"
+                    class="right-menu-item hover-effect" />
         <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
         <lang-select class="right-menu-item hover-effect" />-->
 
       </template>
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item hover-effect"
+                   trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar === ''?defalutImg: avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" />
+          <img :src="avatar === ''?defalutImg: avatar+'?imageView2/1/w/80/h/80'"
+               class="user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <!-- <router-link to="/profile/index">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </router-link> -->
-          <router-link to="/bindDingding/index">
-            <el-dropdown-item>绑定钉钉</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided @click.native="logout">
+          <el-dropdown-item divided
+                            @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -45,7 +44,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
+import Breadcrumb from "@/components/BreadCrumb";
 import Hamburger from "@/components/Hamburger";
 import ErrorLog from "@/components/ErrorLog";
 import Screenfull from "@/components/Screenfull";
@@ -68,19 +67,19 @@ export default {
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"])
   },
-  data(){
-    return{
-      defalutImg:defalutImg
+  data () {
+    return {
+      defalutImg: defalutImg
     }
   },
   methods: {
-    toggleSideBar() {
+    toggleSideBar () {
       this.$store.dispatch("app/toggleSideBar");
     },
-    async logout() {
+    async logout () {
       await this.$store.dispatch("user/logout");
       window.location.search = "";
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      this.$router.push('/login');
     }
   }
 };
@@ -164,6 +163,13 @@ export default {
         }
       }
     }
+  }
+}
+::v-deep .el-dropdown-menu__item--divided {
+  margin-top: 0;
+  border-top: 0;
+  &:before {
+    display: none;
   }
 }
 </style>

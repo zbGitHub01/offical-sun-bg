@@ -1,24 +1,41 @@
-# 东岸科技 官网后台管理系统
+# 东岸官网后台管理系统
+## Build Setup
 
+```bash
+# enter the project directory
+cd offical-website-console-fd
 
-### 官网后台包括用户管理、新闻资讯、广告分类
-
-## Project setup
-```
+# install dependency
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
+# develop
 npm run dev
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+This will automatically open http://localhost:9528
+
+## Build
+
+```bash
+# build for test environment
+npm run build:stage
+
+# build for production environment
+npm run build:prod
 ```
 
-### Lints and fixes files
-```
+## Advanced
+
+```bash
+# preview the release environment effect
+npm run preview
+
+# preview the release environment effect + static resource analysis
+npm run preview -- --report
+
+# code format check
 npm run lint
+
+# code format check and auto fix
+npm run lint -- --fix
 ```
