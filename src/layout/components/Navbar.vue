@@ -44,7 +44,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import BreadCrumbComment from '@/components/BreadCrumb1'
+import BreadCrumbComment from '@/components/BreadCrumb'
 import Hamburger from "@/components/Hamburger";
 import ErrorLog from "@/components/ErrorLog";
 import Screenfull from "@/components/Screenfull";
