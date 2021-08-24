@@ -42,7 +42,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import BreadCrumbComment from '@/components/BreadCrumb'
+import BreadcrumbComment from "@/components/BreadCrumb"
 import Hamburger from "@/components/Hamburger";
 import ErrorLog from "@/components/ErrorLog";
 import Screenfull from "@/components/Screenfull";
@@ -54,7 +54,7 @@ import defalutImg from "@/assets/Images/bluelogo.png"
 import { getAvatar } from '@/utils/auth.js'
 export default {
   components: {
-    BreadCrumbComment,
+    BreadcrumbComment,
     Hamburger,
     ErrorLog,
     Screenfull,
