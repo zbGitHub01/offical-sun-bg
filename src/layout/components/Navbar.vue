@@ -9,6 +9,7 @@
                 class="breadcrumb-container" />
 
     <div class="right-menu">
+
       <template v-if="device!=='mobile'">
         <search id="header-search"
                 class="right-menu-item" />
