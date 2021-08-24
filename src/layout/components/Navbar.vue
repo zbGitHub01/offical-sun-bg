@@ -4,8 +4,8 @@
                :is-active="sidebar.opened"
                class="hamburger-container"
                @toggleClick="toggleSideBar" />
-    <breadcrumb id="breadcrumb-container"
-                class="breadcrumb-container" />
+    <breadcrumb-comment id="breadcrumb-container"
+                        class="breadcrumb-container" />
 
     <div class="right-menu">
 
@@ -44,7 +44,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/BreadCrumb";
+import BreadCrumbComment from '@/components/BreadCrumb'
 import Hamburger from "@/components/Hamburger";
 import ErrorLog from "@/components/ErrorLog";
 import Screenfull from "@/components/Screenfull";
@@ -56,7 +56,7 @@ import defalutImg from "@/assets/Images/bluelogo.png"
 import { getAvatar } from '@/utils/auth.js'
 export default {
   components: {
-    Breadcrumb,
+    BreadCrumbComment,
     Hamburger,
     ErrorLog,
     Screenfull,
