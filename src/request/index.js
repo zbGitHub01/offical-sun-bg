@@ -10,7 +10,7 @@ const service = axios.create({
 
 // 获取本地请求头需要的参数
 const headersKeys = {
-    Authorization: getToken()
+    token: getToken()
 }
 
 service.interceptors.request.use(
@@ -20,9 +20,7 @@ service.interceptors.request.use(
 
         config.url = '/api' + config.url
 
-        for (const key in headersKeys) {
-            config.headers[key] = headersKeys[key] || ''
-        }
+        config.headers['token'] = getToken()
 
         return config
     },

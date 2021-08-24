@@ -13,11 +13,13 @@ import App from "./App";
 import store from "./store";
 import router from "./router";
 import '@/request/api.js'
+import '@/router/filter.js'
 import dayjs from "dayjs"
 import i18n from "./lang"; // Internationalization
 import VueAwesomeSwiper from "vue-awesome-swiper";
 import "swiper/swiper-bundle.css";
 import "@/icons"; // icon
+import '@/utils/tool.js'
 // import "@/permission"; // permission control
 
 /**

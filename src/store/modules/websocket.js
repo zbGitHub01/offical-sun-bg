@@ -1,21 +1,21 @@
 const state = {
-  proData:[]
+    proData: []
 };
 
 const mutations = {
-  proData(state, proData) {
-    state.proData = proData;
-  }
+    proData(state, proData) {
+        state.proData = proData;
+    }
 };
 
 const actions = {
-  changeSetting({ commit }, data) {
-    commit('proData', data)
-  }
+    changeSetting({ commit }, data) {
+        commit('proData', data)
+    }
 };
 
 export default {
-  state,
-  mutations,
-  actions
+    state,
+    mutations,
+    actions
 };

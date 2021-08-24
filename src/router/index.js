@@ -54,6 +54,21 @@ export const constantRoutes = [{
             import ("@/views/error-page/500"),
         hidden: true
     },
+    // 404 page must be placed at the end !!!
+    { path: "*", redirect: "/404", hidden: true },
+    {
+        path: "/profile",
+        component: Layout,
+        redirect: "/profile/index",
+        hidden: true,
+        children: [{
+            path: "index",
+            component: () =>
+                import ("@/views/profile/index"),
+            name: "Profile",
+            meta: { title: "个人中心", icon: "user", noCache: true }
+        }]
+    },
     //首页
     {
         path: "/",
@@ -73,7 +88,7 @@ export const constantRoutes = [{
         redirect: "/advertising",
         name: "Advertising",
         meta: {
-            title: "广告系统",
+            title: "广告管理",
             icon: "el-icon-s-marketing",
         },
         children: [{
@@ -82,7 +97,7 @@ export const constantRoutes = [{
                 component: () =>
                     import ("@/views/advertising/banner/index"),
                 name: "banner",
-                meta: { title: "轮播图" }
+                meta: { title: "广告列表" }
             },
             {
                 path: "type",
@@ -91,15 +106,7 @@ export const constantRoutes = [{
                     import ("@/views/advertising/type/index"),
                 name: "Type",
                 meta: { title: "广告类别" }
-            },
-            // {
-            //     path: "mediatedetail/:caseUserId(\\d+)/:id(\\d+)/:creditorsId(\\d+)/:mediateStatus(\\d+)",
-            //     component: () =>
-            //         import ("@/views/advertising/mediatedetail/index"),
-            //     hidden: true,
-            //     name: "mediatedetail",
-            //     meta: { title: "调解单详情" }
-            // }
+            }
         ]
     },
     {
@@ -108,7 +115,7 @@ export const constantRoutes = [{
         redirect: "/article",
         name: "Article",
         meta: {
-            title: "文章系统",
+            title: "文章管理",
             icon: "el-icon-tickets",
         },
         children: [{
@@ -117,6 +124,12 @@ export const constantRoutes = [{
                 import ("@/views/article/index"),
             name: "List",
             meta: { title: "文章列表" }
+        }, {
+            path: "published",
+            component: () =>
+                import ("@/views/article/Published.vue"),
+            name: "Published",
+            meta: { title: "发表文章" }
         }]
     },
 
@@ -130,53 +143,15 @@ export const constantRoutes = [{
             title: "系统设置",
             icon: "el-icon-setting",
         },
-        children: [
-
-            {
-                path: "product",
-                component: () =>
-                    import ("@/views/system/product/index"),
-                name: "product",
-                meta: { title: "产品管理" }
-            },
-            {
-                path: "menu",
-                component: () =>
-                    import ("@/views/system/menu/index"),
-                name: "menu",
-                meta: { title: "菜单管理" }
-            },
-            {
-                path: "role",
-                component: () =>
-                    import ("@/views/system/role/index"),
-                name: "role",
-                meta: { title: "角色管理" }
-            },
-            {
-                path: "employee",
-                component: () =>
-                    import ("@/views/system/employee/index"),
-                name: "employee",
-                meta: { title: "用户管理" }
-            }
-        ]
-    },
-    // 404 page must be placed at the end !!!
-    { path: "*", redirect: "/404", hidden: true },
-    {
-        path: "/profile",
-        component: Layout,
-        redirect: "/profile/index",
-        hidden: true,
         children: [{
-            path: "index",
+            path: "user",
             component: () =>
-                import ("@/views/profile/index"),
-            name: "Profile",
-            meta: { title: "个人中心", icon: "user", noCache: true }
+                import ("@/views/system/user/index"),
+            name: "User",
+            meta: { title: "用户管理" }
         }]
-    },
+    }
+
 ];
 export const asyncRoutes = [];
 const createRouter = () =>

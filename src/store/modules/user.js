@@ -3,12 +3,13 @@ import {
     getToken,
     setToken,
     removeToken,
-    setAuth,
-    removeAuth,
-    setOrgId,
-    setDepartmentId
+    setRole,
+    removeRole,
+    setUsername,
+    setAvatar
 } from "@/utils/auth";
 import { resetRouter } from "@/router";
+import router from "../../router";
 
 const getDefaultState = () => {
     return {
@@ -73,78 +74,36 @@ const mutations = {
 
 const actions = {
     // user login
-    login({ commit }, params) {
-        // const { userPhone, captcha, openId } = params;
-        // return new Promise((resolve, reject) => {
-        //     login({
-        //             client_id: "东岸开发者平台",
-        //             client_secret: "东岸开发者平台",
-        //             mobile: userPhone.trim(),
-        //             code: captcha,
-        //         })
-        //         .then(response => {
-        //             let tokens = "Bearer " + response.data.token;
-        //             commit("SET_TOKEN", tokens);
-        //             setToken(tokens);
-        //             setAuth(response.data.token);
-        //             resolve();
-        //         })
-        //         .catch(error => {
-        //             reject(error);
-        //         });
-        // });
+    login({ dispatch, commit }, { params, callback }) {
         api.adminLogin(params).then(res => {
             const tokens = res.data;
             commit("SET_TOKEN", tokens);
             setToken(tokens);
-            setAuth(res);
+            dispatch('getInfo', callback)
         })
     },
     // get user info
-    // getInfo({ commit, state }) {
-    //   return new Promise((resolve, reject) => {
-    //     let params = {
-    //       type:3
-    //     }
-    //     getInfo(params)
-    //       .then(response => {
-    //         const { data } = response;
-    //         const {
-    //           username,
-    //           userAvatar,
-    //           isBindDingTalk,
-    //           totalReductionAmount,
-    //           userId,
-    //           departmentId,
-    //           orgName,
-    //           isExportCase,
-    //           orgId
-    //         } = data;
-    //         setOrgId(orgId)
-    //         setDepartmentId(departmentId)
-    //         commit("SET_ISEXPORTCASE",isExportCase)
-    //         commit("SET_USERID", userId);
-    //         commit("SET_NAME", username);
-    //         commit("SET_AVATAR", userAvatar);
-    //         commit("SET_BINDTHIRDSTATUS", isBindDingTalk);
-    //         commit("SET_TOTALREDUCTIONAMOUNT", totalReductionAmount);
-    //         commit("SET_DEPARTMENTNAME", orgName);
-    //         commit("SET_ORGID",orgId)
-    //         commit("SET_DEPARTMENTID",departmentId)
-    //         resolve(data);
-    //         // websocket.Init();
-    //       })
-    //       .catch(error => {
-    //         reject(error);
-    //       });
-    //   });
-    // },
+    getInfo({ commit, state }, callback) {
+        api.getUser().then(res => {
+            const {
+                username,
+                avatarUrl,
+                role
+            } = res.data;
+            commit("SET_NAME", username);
+            commit("SET_AVATAR", avatarUrl);
+            setRole(role);
+            setUsername(username);
+            setAvatar(avatarUrl);
+            callback && callback()
+        })
+    },
 
     // user logout
     logout({ commit, state }) {
         return new Promise((resolve, reject) => {
             removeToken(); // must remove  token  first
-            removeAuth();
+            removeRole();
             resetRouter();
             commit("RESET_STATE");
             resolve();
@@ -155,7 +114,7 @@ const actions = {
     resetToken({ commit }) {
         return new Promise(resolve => {
             removeToken(); // must remove  token  first
-            removeAuth();
+            removeRole();
             commit("RESET_STATE");
             resolve();
         });

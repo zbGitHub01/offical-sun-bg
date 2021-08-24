@@ -1,24 +1,21 @@
 <template>
   <div :class="{'has-logo':showLogo}">
-    <logo v-if="showLogo" :collapse="isCollapse" />
+    <logo v-if="showLogo"
+          :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-menu
-        :default-active="activeMenu"
-        :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
-        :unique-opened="true"
-        :active-text-color="variables.menuActiveText"
-        :collapse-transition="false"
-        mode="vertical"
-        >
-        <sidebar-item
-          ref="sidebar"
-          v-for="route in permission_routes"
-          :key="route.path"
-          :item="route"
-          :base-path="route.path"
-        />
+      <el-menu :default-active="activeMenu"
+               :collapse="isCollapse"
+               :background-color="variables.menuBg"
+               :text-color="variables.menuText"
+               :unique-opened="true"
+               :active-text-color="variables.menuActiveText"
+               :collapse-transition="false"
+               mode="vertical">
+        <sidebar-item ref="sidebar"
+                      v-for="route in routes"
+                      :key="route.path"
+                      :item="route"
+                      :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -29,15 +26,19 @@ import { mapGetters } from "vuex";
 import Logo from "./Logo";
 import SidebarItem from "./SidebarItem";
 import variables from "@/styles/variables.scss";
+import { getRole } from '@/utils/auth.js'
 
 export default {
   components: { SidebarItem, Logo },
   computed: {
-    ...mapGetters(["permission_routes","sidebar"]),
-    routes() {
-      return this.$router.options.routes;
+    ...mapGetters(["permission_routes", "sidebar"]),
+    routes () {
+      const routes = JSON.parse(JSON.stringify(this.permission_routes))
+      const roleRoute = routes.slice(0, routes.length - 1)
+      const roleList = ['superAdmin', 'admin']
+      return roleList.includes(getRole()) ? routes : roleRoute
     },
-    activeMenu() {
+    activeMenu () {
       const route = this.$route;
       const { meta, path } = route;
       // if set path, the sidebar will highlight the path you set
@@ -46,18 +47,18 @@ export default {
       }
       return path;
     },
-    showLogo() {
+    showLogo () {
       return true;
     },
-    variables() {
+    variables () {
       return variables;
     },
-    isCollapse() {
+    isCollapse () {
       return !this.sidebar.opened;
     }
   },
-  mounted(){
-    console.log(this,"900000000")
+  mounted () {
+    // console.log(this,"900000000")
   }
 
 };

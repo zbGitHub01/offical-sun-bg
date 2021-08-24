@@ -24,7 +24,7 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect"
                    trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar === ''?defalutImg: avatar+'?imageView2/1/w/80/h/80'"
+          <img :src="avatar"
                class="user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
@@ -53,6 +53,7 @@ import LangSelect from "@/components/LangSelect";
 import Search from "@/components/HeaderSearch";
 import popover from "@/components/popover";
 import defalutImg from "@/assets/Images/bluelogo.png"
+import { getAvatar } from '@/utils/auth.js'
 export default {
   components: {
     Breadcrumb,
@@ -65,7 +66,11 @@ export default {
     popover,
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"])
+    ...mapGetters(["sidebar", "device"]),
+    avatar () {
+      const temAvatar = getAvatar()
+      return this.$isEmpty(temAvatar) ? defalutImg : temAvatar + '?imageView2/1/w/80/h/80'
+    }
   },
   data () {
     return {
@@ -78,7 +83,7 @@ export default {
     },
     async logout () {
       await this.$store.dispatch("user/logout");
-      window.location.search = "";
+      // window.location.search = "";
       this.$router.push('/login');
     }
   }

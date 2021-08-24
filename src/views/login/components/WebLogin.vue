@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import { setToken } from "@/utils/auth";
 export default {
   name: 'WebLogin',
   methods: {
@@ -42,22 +41,18 @@ export default {
       const params = {
         ...this.form.data
       }
-      this.$store
-        .dispatch("user/login", params)
-        .then(() => {
-          this.$router.push({ path: this.redirect || "/dashboard" });
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    }
+      const callback = () => {
+        this.$router.push({ path: "/dashboard" });
+        this.loading = false;
+      }
+      this.$store.dispatch("user/login", { params, callback })
+    },
+
   },
   data () {
     return {
       title: '登录',
       loading: false,
-      redirect: undefined,
       form: {
         rules: Object.freeze({
           username: [
@@ -78,9 +73,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.web-wrap {
-  // padding: 0 48px;
-}
 .login-wrap {
   padding: 0 48px;
   width: 360px;
