@@ -29,6 +29,7 @@ export const urls = {
     addUser: '/user/add', // 添加用户
     updateByIdUser: '/user/updateById', // 修改用户
     deleteUser: '/user/delete', // 删除用户
+    getUsers: '/user/getUsers', // 根据id获取用户信息
 
 
 

@@ -50,9 +50,7 @@ export default {
       }
       this.$api.addAdvantageCategory(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('新增成功')
-        this.$emit('getTableData')
-        this.onClose()
+        this.successTip(res, '新增成功')
       })
     },
     // 编辑
@@ -62,10 +60,13 @@ export default {
       }
       this.$api.updateByIdAdvantageCategory(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('编辑成功')
-        this.$emit('getTableData')
-        this.onClose()
+        this.successTip(res, '编辑成功')
       })
+    },
+    successTip (res, tip) {
+      res.code === 200 ? this.$message.success(tip) : this.$message.error(res.msg)
+      this.$emit('getTableData')
+      this.onClose()
     },
     // 打开弹窗
     show (type, data) {

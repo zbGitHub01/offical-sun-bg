@@ -9,7 +9,7 @@
                :model="form.data">
         <el-form-item prop="username">
           <el-input v-model="form.data.username"
-                    placeholder="请输入手机号"></el-input>
+                    placeholder="请输入用户账号"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input v-model="form.data.password"
@@ -56,7 +56,7 @@ export default {
       form: {
         rules: Object.freeze({
           username: [
-            { required: true, message: '请输入手机号', trigger: 'blur' }
+            { required: true, message: '请输入用户账号', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' }

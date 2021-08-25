@@ -23,29 +23,15 @@
                 ref="multipleTable"
                 :data="table.data">
         <template v-for="(item, index) in table.headerConfig">
-          <div :key="index">
-            <el-table-column v-if="item.key === 'picture'"
-                             :property="item.key"
-                             :label="item.title"
-                             align="center"
-                             :width="item.width"
-                             :min-width="item.minWidth">
-              <template slot-scope="scope">
-                <el-image style="width: 150px"
-                          :src="scope.row.picture"
-                          :preview-src-list="[scope.row.picture]"
-                          fit="contain"></el-image>
-              </template>
-            </el-table-column>
-            <el-table-column v-else
-                             :property="item.key"
-                             :label="item.title"
-                             align="center"
-                             :width="item.width"
-                             :min-width="item.minWidth" />
-          </div>
+          <el-table-column :key="index"
+                           :property="item.key"
+                           :label="item.title"
+                           align="center"
+                           :width="item.width"
+                           :min-width="item.minWidth" />
         </template>
-        <el-table-column property="enable"
+        <el-table-column v-if="isShowOperate"
+                         property="enable"
                          align="center"
                          label="操作"
                          fixed="right"
@@ -71,6 +57,7 @@
 <script>
 import Pagination from "@/components/Pagination";
 import FormDialog from './formDialog.vue';
+import { getRole } from '@/utils/auth.js'
 export default {
   name: 'index',
   components: { Pagination, FormDialog },
@@ -83,7 +70,7 @@ export default {
     onDelete (id) {
       this.$api.deleteUser({ id }).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('删除成功')
+        res.code === 200 ? this.$message.success('删除成功') : this.$message.error(res.msg)
         this.getTableData()
       })
     },
@@ -147,6 +134,11 @@ export default {
   },
   created () {
     this.getTableData()
+  },
+  computed: {
+    isShowOperate () {
+      return getRole() === 'superAdmin'
+    }
   }
 }
 </script>

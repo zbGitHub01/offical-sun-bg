@@ -50,9 +50,12 @@
       </el-form-item>
       <el-form-item label="内容"
                     prop="html">
-        <Tinymce ref="editor"
+        <!-- <Tinymce ref="editor"
                  v-model="form.data.html"
-                 :height="300" />
+                 :height="300" /> -->
+        <tinymce-comment ref="editor"
+                         v-model="form.data.html"
+                         :height="300" />
       </el-form-item>
     </el-form>
     <div style="text-align:center">
@@ -65,10 +68,10 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
+import TinymceComment from '@/components/Tinymce'
 export default {
   name: 'Published',
-  components: { Tinymce },
+  components: { TinymceComment },
   methods: {
     // 上传前判断
     beforeHandleUpload (file) {
@@ -112,8 +115,7 @@ export default {
       }
       this.$api.addArticle(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('新增成功')
-        this.onClose()
+        this.successTip(res, '新增成功')
       })
     },
     // 编辑
@@ -123,9 +125,12 @@ export default {
       }
       this.$api.updateByIdArticle(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('编辑成功')
-        this.onClose()
+        this.successTip(res, '编辑成功')
       })
+    },
+    successTip (res, tip) {
+      res.code === 200 ? this.$message.success(tip) : this.$message.error(res.msg)
+      this.onClose()
     },
     // 新闻资讯id查新闻资讯
     findByIdArticle (id) {

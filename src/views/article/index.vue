@@ -42,21 +42,6 @@
                           fit="contain"></el-image>
               </template>
             </el-table-column>
-            <!-- <el-table-column v-else-if="item.key === 'intro'"
-                             :property="item.key"
-                             :label="item.title"
-                             align="center"
-                             :width="item.width"
-                             :min-width="item.minWidth">
-              <template slot-scope="scope">
-                <el-popover placement="top"
-                            width="400"
-                            trigger="hover">
-                  <div>{{scope.row.intro}}</div>
-                  <div slot="reference">{{scope.row.intro}}</div>
-                </el-popover>
-              </template>
-            </el-table-column> -->
             <el-table-column v-else
                              :property="item.key"
                              :label="item.title"
@@ -108,7 +93,7 @@ export default {
     onDelete (id) {
       this.$api.deleteArticle({ id }).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('删除成功')
+        res.code === 200 ? this.$message.success('删除成功') : this.$message.error(res.msg)
         this.getTableData()
       })
     },
@@ -117,7 +102,7 @@ export default {
       if (this.$isEmpty(this.selectedIds)) return this.$message.warning('请至少选中一条数据')
       this.$api.deleteListArticle({ idLists: this.selectedIds }).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('删除成功')
+        res.code === 200 ? this.$message.success('删除成功') : this.$message.error(res.msg)
         this.getTableData()
       })
     },

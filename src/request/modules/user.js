@@ -49,20 +49,13 @@ export function deleteUser(params) { // 删除用户
         data: {...params }
     })
 }
-// export function deleteListArticle(params) { // 删除多条新闻资讯
-//     return request({
-//         url: urls.deleteListArticle,
-//         method: 'delete',
-//         data: {...params }
-//     })
-// }
-// export function findByIdArticle(params) { // 新闻资讯id查新闻资讯
-//     return request({
-//         url: urls.findByIdArticle,
-//         method: 'get',
-//         params,
-//     })
-// }
+export function getUsers(params) { // 根据id获取用户信息
+    return request({
+        url: urls.getUsers,
+        method: 'get',
+        params,
+    })
+}
 
 
 // ——————————————————  上传文件接口
