@@ -43,7 +43,7 @@ service.interceptors.response.use(
         // 返回数据流，直接返回
         if (types.includes(resType)) return response
             // 错误处理
-        res.isError = response.status !== 200
+        res.isError = response.status !== 200 || (response.status === 200 && response.data.code !== 200)
         return res
     },
     error => {

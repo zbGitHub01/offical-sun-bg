@@ -115,7 +115,7 @@ export default {
       }
       this.$api.addArticle(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.successTip(res, '新增成功')
+        this.successTip('新增成功')
       })
     },
     // 编辑
@@ -125,11 +125,11 @@ export default {
       }
       this.$api.updateByIdArticle(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.successTip(res, '编辑成功')
+        this.successTip('编辑成功')
       })
     },
-    successTip (res, tip) {
-      res.code === 200 ? this.$message.success(tip) : this.$message.error(res.msg)
+    successTip (tip) {
+      this.$message.success(tip)
       this.onClose()
     },
     // 新闻资讯id查新闻资讯

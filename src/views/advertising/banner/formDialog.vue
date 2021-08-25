@@ -105,7 +105,7 @@ export default {
       }
       this.$api.addAdvantage(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.successTip(res, '新增成功')
+        this.successTip('新增成功')
       })
     },
     // 编辑
@@ -115,11 +115,11 @@ export default {
       }
       this.$api.updateByIdAdvantage(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        this.successTip(res, '编辑成功')
+        this.successTip('编辑成功')
       })
     },
-    successTip (res, tip) {
-      res.code === 200 ? this.$message.success(tip) : this.$message.error(res.msg)
+    successTip (tip) {
+      this.$message.success(tip)
       this.$emit('getTableData')
       this.onClose()
     },

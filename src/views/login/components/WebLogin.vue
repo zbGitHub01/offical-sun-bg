@@ -41,11 +41,13 @@ export default {
       const params = {
         ...this.form.data
       }
-      const callback = () => {
+      const callback1 = () => {
         this.$router.push({ path: "/dashboard" });
+      }
+      const callback2 = () => {
         this.loading = false;
       }
-      this.$store.dispatch("user/login", { params, callback })
+      this.$store.dispatch("user/login", { params, callback1, callback2 })
     },
 
   },

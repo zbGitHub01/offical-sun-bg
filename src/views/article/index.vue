@@ -93,7 +93,7 @@ export default {
     onDelete (id) {
       this.$api.deleteArticle({ id }).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        res.code === 200 ? this.$message.success('删除成功') : this.$message.error(res.msg)
+        this.$message.success('删除成功')
         this.getTableData()
       })
     },
@@ -102,7 +102,7 @@ export default {
       if (this.$isEmpty(this.selectedIds)) return this.$message.warning('请至少选中一条数据')
       this.$api.deleteListArticle({ idLists: this.selectedIds }).then(res => {
         if (res.isError) return this.$message.error(res.msg)
-        res.code === 200 ? this.$message.success('删除成功') : this.$message.error(res.msg)
+        this.$message.success('删除成功')
         this.getTableData()
       })
     },

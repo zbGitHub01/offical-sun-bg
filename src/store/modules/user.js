@@ -9,7 +9,7 @@ import {
     setAvatar
 } from "@/utils/auth";
 import { resetRouter } from "@/router";
-import router from "../../router";
+import { Message } from 'element-ui'
 
 const getDefaultState = () => {
     return {
@@ -74,17 +74,20 @@ const mutations = {
 
 const actions = {
     // user login
-    login({ dispatch, commit }, { params, callback }) {
+    login({ dispatch, commit }, { params, callback1, callback2 }) {
         api.adminLogin(params).then(res => {
+            callback2 && callback2()
+            if (res.isError) return Message.error(res.msg)
             const tokens = res.data;
             commit("SET_TOKEN", tokens);
             setToken(tokens);
-            dispatch('getInfo', callback)
+            dispatch('getInfo', callback1)
         })
     },
     // get user info
-    getInfo({ commit, state }, callback) {
+    getInfo({ commit }, callback1) {
         api.getUser().then(res => {
+            if (res.isError) return Message.error(res.msg)
             const {
                 username,
                 avatarUrl,
@@ -95,7 +98,7 @@ const actions = {
             setRole(role);
             setUsername(username);
             setAvatar(avatarUrl);
-            callback && callback()
+            callback1 && callback1()
         })
     },
 
