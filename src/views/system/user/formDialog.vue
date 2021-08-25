@@ -25,6 +25,7 @@
                     prop="role">
         <el-select v-model="form.data.role"
                    class="w200"
+                   :disabled="form.data.role === 'superAdmin'"
                    placeholder="请选择角色">
           <el-option v-for="item in roleOptions"
                      :key="item.id"
@@ -55,8 +56,6 @@
           <div v-else
                class="ft24">
             <i class="el-icon-plus"></i>
-            <!-- <div class="el-upload__text">将图片拖到此处，或<em> 点击上传</em></div>
-            <div class="el-upload__text">建议图片尺寸大小：1920 * 600px</div> -->
           </div>
           <div class="update-img center ft12"
                v-if="form.data.avatarUrl">修改图片</div>

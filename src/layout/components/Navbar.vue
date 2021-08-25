@@ -30,6 +30,9 @@
           <!-- <router-link to="/profile/index">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </router-link> -->
+          <el-dropdown-item @click.native="onPassword">
+            <span style="display:block;">修改密码</span>
+          </el-dropdown-item>
           <el-dropdown-item divided
                             @click.native="logout">
             <span style="display:block;">退出登录</span>
@@ -37,6 +40,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <change-password ref="changePassword"></change-password>
   </div>
 </template>
 
@@ -52,6 +56,7 @@ import Search from "@/components/HeaderSearch";
 import popover from "@/components/popover";
 import defalutImg from "@/assets/Images/bluelogo.png"
 import { getAvatar } from '@/utils/auth.js'
+import ChangePassword from './ChangePassword.vue';
 export default {
   components: {
     BreadcrumbComment,
@@ -62,6 +67,7 @@ export default {
     LangSelect,
     Search,
     popover,
+    ChangePassword
   },
   computed: {
     ...mapGetters(["sidebar", "device"]),
@@ -83,6 +89,9 @@ export default {
       await this.$store.dispatch("user/logout");
       // window.location.search = "";
       this.$router.push('/login');
+    },
+    onPassword () {
+      this.$refs.changePassword.show()
     }
   }
 };
@@ -166,13 +175,6 @@ export default {
         }
       }
     }
-  }
-}
-::v-deep .el-dropdown-menu__item--divided {
-  margin-top: 0;
-  border-top: 0;
-  &:before {
-    display: none;
   }
 }
 </style>

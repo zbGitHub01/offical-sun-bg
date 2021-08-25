@@ -2,6 +2,7 @@ export const urls = {
     // 登录
     adminLogin: '/user/adminLogin', // 登录
     getUser: '/user/getUser', // 获取用户信息
+    changePassword: '/user/changePassword', // 用户修改密码
 
     // 广告
     addAdvantageCategory: '/AdvantageCategory/add', // 添加广告分类

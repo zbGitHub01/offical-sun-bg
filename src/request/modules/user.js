@@ -20,7 +20,15 @@ export function getUser(data) { // 获取用户信息
         params: data
     })
 }
-
+export function changePassword(params) { // 用户修改密码
+    return request({
+        url: urls.changePassword,
+        method: 'post',
+        data: {
+            ...params
+        }
+    })
+}
 export function findPageUser(data) { // 分页获取用户
     return request({
         url: urls.findPageUser,
