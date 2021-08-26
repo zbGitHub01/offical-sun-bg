@@ -22,6 +22,7 @@
       <el-table border
                 @selection-change="onSelectionChange"
                 ref="multipleTable"
+                row-key="id"
                 :data="table.data">
         <el-table-column type="selection"
                          align="center"
@@ -64,6 +65,7 @@
         </el-table-column>
       </el-table>
       <pagination :total="table.total"
+                  :pageSizes="[10,20,50,100]"
                   :page.sync="search.page"
                   :limit.sync="search.pageSize"
                   @pagination="getTableData" />
@@ -73,10 +75,28 @@
 
 <script>
 import Pagination from "@/components/Pagination";
+import Sortable from 'sortablejs'
 export default {
   name: 'index',
   components: { Pagination },
   methods: {
+    // 行拖拽
+    rowDrop () {
+      const tbody = document.querySelector('.el-table__body-wrapper tbody')
+      const _this = this
+      Sortable.create(tbody, {
+        onEnd ({ newIndex, oldIndex }) {
+          const changeRow = _this.table.data[newIndex]
+          const selectRow = _this.table.data.splice(oldIndex, 1)[0]
+          _this.table.data.splice(newIndex, 0, selectRow)
+          const params = {
+            changeSortIndex: changeRow.indexSort,
+            selectSortIndex: selectRow.indexSort
+          }
+          _this.updateSortArticle(params)
+        }
+      })
+    },
     // 新增、编辑
     onAdvantage (type, id) {
       if (type === 'delete') return this.onSelectedDelete()
@@ -88,6 +108,19 @@ export default {
       }
       type === 'add' && delete route.query
       this.$router.push(route)
+    },
+    // 修改新闻资讯位置
+    updateSortArticle (data) {
+      const { changeSortIndex, selectSortIndex } = data
+      const params = {
+        changeSortIndex, selectSortIndex
+      }
+      this.$api.updateSortArticle(params).then(res => {
+        if (res.isError) return this.$message.error(res.msg)
+        this.$message.success('换位成功')
+        this.getTableData()
+      })
+
     },
     // 删除
     onDelete (id) {
@@ -180,6 +213,9 @@ export default {
   },
   created () {
     this.getTableData()
+  },
+  mounted () {
+    this.rowDrop()
   }
 }
 </script>

@@ -24,6 +24,7 @@ export const urls = {
     deleteListArticle: '/article/deleteList', // 删除多条广告
     updateByIdArticle: '/article/updateById', // 修改新闻资讯
     findByIdArticle: '/article/findById', // 新闻资讯id查新闻资讯
+    updateSortArticle: '/article/updateSort', // 修改新闻资讯位置
 
     // 管理员
     findPageUser: '/user/findPage', // 分页获取用户

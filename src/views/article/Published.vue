@@ -50,9 +50,6 @@
       </el-form-item>
       <el-form-item label="内容"
                     prop="html">
-        <!-- <Tinymce ref="editor"
-                 v-model="form.data.html"
-                 :height="300" /> -->
         <tinymce-comment ref="editor"
                          v-model="form.data.html"
                          :height="300" />

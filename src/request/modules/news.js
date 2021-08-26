@@ -43,3 +43,10 @@ export function findByIdArticle(params) { // 新闻资讯id查新闻资讯
         params,
     })
 }
+export function updateSortArticle(params) { // 修改新闻资讯位置
+    return request({
+        url: urls.updateSortArticle,
+        method: 'post',
+        data: {...params }
+    })
+}
