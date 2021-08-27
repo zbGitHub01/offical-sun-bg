@@ -40,11 +40,28 @@ service.interceptors.response.use(
         const res = response.data
         const resType = response.config.responseType
         const types = ['blob', 'arraybuffer']
-
-        // 返回数据流，直接返回
+            // 返回数据流，直接返回
         if (types.includes(resType)) return response
+        const errorSubCode = [103]
             // 错误处理
-        res.isError = response.status !== 200 || (response.status === 200 && response.data.code !== 200)
+        res.isError = !errorSubCode.includes(res.code) && (res.code !== 200)
+        if (errorSubCode.includes(res.code)) {
+            MessageBox.confirm(
+                '您的登录已过期，请重新登录', {
+                    confirmButtonText: '重新登录',
+                    showClose: false,
+                    center: true,
+                    showCancelButton: false,
+                    closeOnClickModal: false,
+                    closeOnPressEscape: false,
+                    type: 'warning'
+                }
+            ).then(() => {
+                removeToken()
+                removeRole()
+                router.push({ path: '/login' })
+            })
+        }
         return res
     },
     error => {
@@ -63,26 +80,7 @@ service.interceptors.response.use(
             return { isError: true }
         }
 
-        const errorSubCode = res.data.code
-        const subCodes = [103]
-        if (subCodes.includes(errorSubCode)) {
-            MessageBox.confirm(
-                '您的登录已过期，请重新登录', {
-                    confirmButtonText: '重新登录',
-                    showClose: false,
-                    center: true,
-                    showCancelButton: false,
-                    closeOnClickModal: false,
-                    closeOnPressEscape: false,
-                    type: 'warning'
-                }
-            ).then(() => {
-                removeToken()
-                removeRole()
-                router.push({ path: '/login' })
-            })
-            errorLock = true
-        }
+
     }
 )
 
