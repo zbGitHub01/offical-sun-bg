@@ -1,8 +1,9 @@
 import request from '../index'
 import { urls } from '../urls'
 import axios from 'axios'
-import { Message } from 'element-ui'
-import { getToken } from "@/utils/auth";
+import { Message, MessageBox } from 'element-ui'
+import { getToken, removeToken, removeRole } from "@/utils/auth";
+import router from '@/router'
 
 export function adminLogin(params) { // 登录
     return request({
@@ -79,9 +80,32 @@ export function uploadFile(config) { // 上传图片
     const url = '/api/upload/upload'
     return new Promise((resolve, reject) => {
         axios.post(url, formData, temConfig).then(res => {
+            const resData = res.data
             if (res.status === 200) {
-                const filePaths = res.data.data
-                resolve(filePaths)
+                if (resData.code === 103) {
+                    MessageBox.confirm(
+                        '您的登录已过期，请重新登录', {
+                            confirmButtonText: '重新登录',
+                            showClose: false,
+                            center: true,
+                            showCancelButton: false,
+                            closeOnClickModal: false,
+                            closeOnPressEscape: false,
+                            type: 'warning'
+                        }
+                    ).then(() => {
+                        removeToken()
+                        removeRole()
+                        router.push({ path: '/login' })
+                    })
+                    return
+                }
+                if (resData.code === 200) {
+                    const filePaths = resData.data
+                    resolve(filePaths)
+                } else {
+                    Message.error('资源上传失败，请稍后重新上传')
+                }
             } else {
                 Message.error('资源上传失败，请稍后重新上传')
             }
