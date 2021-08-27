@@ -1,7 +1,8 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
-import { getToken } from "@/utils/auth";
+import { Message, MessageBox } from 'element-ui'
+import { getToken, removeToken, removeRole } from "@/utils/auth";
 import { removePending, addPending } from './cancel.js'
+import router from '@/router'
 
 const service = axios.create({
     withCredentials: true,
@@ -62,25 +63,26 @@ service.interceptors.response.use(
             return { isError: true }
         }
 
-        // const errorSubCode = error ? .response ? .data ? .subCode ? ? null
-        // const subCodes = ['TOKEN_EXPIRED', 'TOKEN_NULL']
-
-        // if (subCodes.includes(errorSubCode)) {
-        //     MessageBox.confirm(
-        //         '您的登录已过期，请重新登录', {
-        //             confirmButtonText: '重新登录',
-        //             showClose: false,
-        //             center: true,
-        //             showCancelButton: false,
-        //             closeOnClickModal: false,
-        //             closeOnPressEscape: false,
-        //             type: 'warning'
-        //         }
-        //     ).then(() => {
-        //         goLogin()
-        //     })
-        //     errorLock = true
-        // }
+        const errorSubCode = res.data.code
+        const subCodes = [103]
+        if (subCodes.includes(errorSubCode)) {
+            MessageBox.confirm(
+                '您的登录已过期，请重新登录', {
+                    confirmButtonText: '重新登录',
+                    showClose: false,
+                    center: true,
+                    showCancelButton: false,
+                    closeOnClickModal: false,
+                    closeOnPressEscape: false,
+                    type: 'warning'
+                }
+            ).then(() => {
+                removeToken()
+                removeRole()
+                router.push({ path: '/login' })
+            })
+            errorLock = true
+        }
     }
 )
 
