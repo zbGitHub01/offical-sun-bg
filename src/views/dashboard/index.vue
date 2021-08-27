@@ -33,8 +33,8 @@ export default {
   width: 100%;
   margin-top: 80px;
   img {
-    width: 636px;
-    height: 556px;
+    width: 643px;
+    height: 522px;
     margin-bottom: 12px;
   }
 }
