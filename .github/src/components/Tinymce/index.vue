@@ -1,8 +1,13 @@
 <template>
-  <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
-    <textarea :id="tinymceId" class="tinymce-textarea" />
+  <div :class="{fullscreen:fullscreen}"
+       class="tinymce-container"
+       :style="{width:containerWidth}">
+    <textarea :id="tinymceId"
+              class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+      <editorImage color="#1890ff"
+                   class="editor-upload-btn"
+                   @successCBK="imageSuccessCBK" />
     </div>
   </div>
 </template>
@@ -18,7 +23,7 @@ import toolbar from './toolbar'
 import load from './dynamicLoadScript'
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
-const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
+const tinymceCDN = 'https://fastly.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
 
 export default {
   name: 'Tinymce',
@@ -26,7 +31,7 @@ export default {
   props: {
     id: {
       type: String,
-      default: function() {
+      default: function () {
         return 'vue-tinymce-' + +new Date() + ((Math.random() * 1000).toFixed(0) + '')
       }
     },
@@ -37,7 +42,7 @@ export default {
     toolbar: {
       type: Array,
       required: false,
-      default() {
+      default () {
         return []
       }
     },
@@ -56,7 +61,7 @@ export default {
       default: 'auto'
     }
   },
-  data() {
+  data () {
     return {
       hasChange: false,
       hasInit: false,
@@ -71,7 +76,7 @@ export default {
     }
   },
   computed: {
-    containerWidth() {
+    containerWidth () {
       const width = this.width
       if (/^[\d]+(\.[\d]+)?$/.test(width)) { // matches `100`, `'100'`
         return `${width}px`
@@ -80,29 +85,29 @@ export default {
     }
   },
   watch: {
-    value(val) {
+    value (val) {
       if (!this.hasChange && this.hasInit) {
         this.$nextTick(() =>
           window.tinymce.get(this.tinymceId).setContent(val || ''))
       }
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   },
-  activated() {
+  activated () {
     if (window.tinymce) {
       this.initTinymce()
     }
   },
-  deactivated() {
+  deactivated () {
     this.destroyTinymce()
   },
-  destroyed() {
+  destroyed () {
     this.destroyTinymce()
   },
   methods: {
-    init() {
+    init () {
       // dynamic load tinymce from cdn
       load(tinymceCDN, (err) => {
         if (err) {
@@ -112,7 +117,7 @@ export default {
         this.initTinymce()
       })
     },
-    initTinymce() {
+    initTinymce () {
       const _this = this
       window.tinymce.init({
         selector: `#${this.tinymceId}`,
@@ -143,7 +148,7 @@ export default {
             this.$emit('input', editor.getContent())
           })
         },
-        setup(editor) {
+        setup (editor) {
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
           })
@@ -187,7 +192,7 @@ export default {
         // },
       })
     },
-    destroyTinymce() {
+    destroyTinymce () {
       const tinymce = window.tinymce.get(this.tinymceId)
       if (this.fullscreen) {
         tinymce.execCommand('mceFullScreen')
@@ -197,21 +202,21 @@ export default {
         tinymce.destroy()
       }
     },
-    setContent(value) {
-      console.log(window.tinymce,"8649579")
+    setContent (value) {
+      console.log(window.tinymce, "8649579")
       window.tinymce.get(this.tinymceId).setContent(value)
     },
-    execCommand(value){
+    execCommand (value) {
       const tinymce = window.tinymce.get(this.tinymceId)
       tinymce.execCommand('mceInsertContent', false, value);
     },
-    getContent() {
+    getContent () {
       return window.tinymce.get(this.tinymceId).getContent()
     },
-    getCopy(){
-      return window.tinymce.get(this.tinymceId).getContent( { 'format' : 'text' } );
+    getCopy () {
+      return window.tinymce.get(this.tinymceId).getContent({ 'format': 'text' });
     },
-    imageSuccessCBK(arr) {
+    imageSuccessCBK (arr) {
       arr.forEach(v => window.tinymce.get(this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`))
     }
   }
