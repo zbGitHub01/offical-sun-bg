@@ -132,6 +132,23 @@ export const constantRoutes = [{
             meta: { title: "发表文章" }
         }]
     },
+    {
+        path: "/contact",
+        component: Layout,
+        redirect: "/contact",
+        name: "Contact",
+        meta: {
+            title: "留言",
+            icon: "el-icon-data-line",
+        },
+        children: [{
+            path: "list",
+            component: () =>
+                import ("@/views/contact/index"),
+            name: "List",
+            meta: { title: "留言列表" }
+        }]
+    },
 
     // 系统设置
     {

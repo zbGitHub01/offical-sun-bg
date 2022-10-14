@@ -33,6 +33,11 @@ export const urls = {
     deleteUser: '/user/delete', // 删除用户
     getUsers: '/user/getUsers', // 根据id获取用户信息
 
+    // 联系人
+    contactUsAdd: '/contactUs/add', // 添加联系我们
+    contactUsList: '/contactUs/list', // 联系人列表
+    contactUsDelete: '/contactUs/delete', // 删除联系人
+    contactUsExportExcel: '/contactUs/exportExcel', // 导出联系人列表
 
 
 }
