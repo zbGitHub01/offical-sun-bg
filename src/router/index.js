@@ -167,7 +167,30 @@ export const constantRoutes = [{
             name: "User",
             meta: { title: "用户管理" }
         }]
-    }
+    },
+    {
+      path: "/aSunshine",
+      component: Layout,
+      redirect: "/aSunshine",
+      name: "ASunshine",
+      meta: {
+          title: "阳光行动",
+          icon: "el-icon-sort",
+      },
+      children: [{
+          path: "contentMana",
+          component: () =>
+              import ("@/views/actionSunshine/contentMana/index"),
+          name: "ContentMana",
+          meta: { title: "内容管理" }
+      }, {
+          path: "regInfoMana",
+          component: () =>
+              import ("@/views/actionSunshine/regInfoMana/index"),
+          name: "RegInfoMana",
+          meta: { title: "报名信息管理" }
+      }]
+  },
 
 ];
 export const asyncRoutes = [];
