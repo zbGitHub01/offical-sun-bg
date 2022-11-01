@@ -35,7 +35,7 @@
             <template slot-scope="scope">
                 <el-popover placement="bottom"
                             width="260"
-                            v-if="scope.row.remark.length >12"
+                            v-if="scope.row.remark.length >12"  
                             trigger="hover">
                 <div>{{scope.row.remark}}</div>
                 <span slot="reference">{{scope.row.remark.substring(0,12)+'...'}}</span>
@@ -45,14 +45,16 @@
             </el-table-column>
             <el-table-column property="enable"
                             align="center"
-                            label="操作"
+                            label="备注"
                             fixed="right"
                             width="150px">
             <template slot-scope="scope">
-                <el-button type="text"
-                            @click="onEdit('edit',scope.row)">编辑</el-button>
-                <el-button type="text"
-                            @click="onDelete(scope.row.id)">删除</el-button>
+                <el-popconfirm
+                    :title="scope.row.title"
+                    icon="el-icon-info"
+                    >
+                    <el-button slot="reference">查看</el-button>
+                    </el-popconfirm>
             </template>
             </el-table-column>
         </el-table>
@@ -147,6 +149,11 @@ data () {
         title: "导出",
         icon: "export",
         prop: 'delete'
+        },
+        {
+        title: "上传文档附件",
+        icon: "add",
+        prop: 'upload'
         },
     ],
     table: {

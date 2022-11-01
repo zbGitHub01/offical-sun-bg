@@ -416,4 +416,7 @@ $pubMargin: 20px;
     }
   }
 }
+ ::v-deep .el-dialog {
+  margin-top: 5vh !important;
+}
 </style>

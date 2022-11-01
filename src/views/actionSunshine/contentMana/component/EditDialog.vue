@@ -181,16 +181,16 @@ export default {
         },
         rules: Object.freeze({
           title: [
-            { required: true, message: '请输入文章标题', trigger: 'blur' }
+            { required: true, message: '请输入标题', trigger: 'blur' }
           ],
           intro: [
-            { required: true, message: '请输入文章描述', trigger: 'blur' }
+            { required: true, message: '请输入描述', trigger: 'blur' }
           ],
           picture: [
-            { required: true, message: '请上传文章图片', trigger: 'change' }
+            { required: true, message: '请上传图片', trigger: 'change' }
           ],
           html: [
-            { required: true, message: '请填写文章内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ]
         })
       },
