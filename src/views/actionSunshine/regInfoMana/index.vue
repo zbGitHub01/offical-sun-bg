@@ -1,6 +1,6 @@
 <template>
-     <div class="app-container message-container type-wrap column">
-        <div class="style-container mb20">
+<div class="app-container message-container type-wrap column">
+    <div class="style-container mb20">
         <div v-for="(item,index) in searchCondition" :key="index">
             <div class="item_warp"
                 @click="onCondition(item.prop)">
@@ -29,33 +29,19 @@
                 :width="item.width"
                 :min-width="item.minWidth" />
             </div>
-            <el-table-column label="问题描述"
-                            width="240"
-                            align="center">
-            <template slot-scope="scope">
-                <el-popover placement="bottom"
-                            width="260"
-                            v-if="scope.row.remark.length >12"  
-                            trigger="hover">
-                <div>{{scope.row.remark}}</div>
-                <span slot="reference">{{scope.row.remark.substring(0,12)+'...'}}</span>
-                </el-popover>
-                <span v-else>{{scope.row.remark}}</span>
-            </template>
-            </el-table-column>
             <el-table-column property="enable"
                             align="center"
                             label="备注"
                             fixed="right"
                             width="150px">
-            <template slot-scope="scope">
-                <el-popconfirm
-                    :title="scope.row.title"
-                    icon="el-icon-info"
-                    >
+              <template slot-scope="scope">
+                  <el-popconfirm
+                      :title="scope.row.remark"
+                      icon="el-icon-info"
+                      >
                     <el-button slot="reference">查看</el-button>
-                    </el-popconfirm>
-            </template>
+                  </el-popconfirm>
+              </template>
             </el-table-column>
         </el-table>
         <pagination 
@@ -69,6 +55,7 @@
 
 <script>
 import Pagination from "@/components/Pagination";
+import { HeaderList } from './tableHeader/index.js'
 export default {
 name: 'index',
 components: { Pagination },
@@ -87,7 +74,7 @@ methods: {
         idSet: this.selectedIds,
         param: { ...this.search }
     }
-    this.$api.contactUsExportExcel(exportParams).then(res => {
+    this.$api.exportExcel(exportParams).then(res => {
         if (res.isError) return this.$message.error(res.msg)
         window.open(res.data.url)
         this.$message.success('导出成功')
@@ -95,28 +82,9 @@ methods: {
 
 
     },
-    // 删除
-    onDelete (id) {
-    this.$confirm('确定删除该条留言吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-    }).then(() => {
-        this.$api.contactUsDelete({ id }).then(res => {
-        if (res.isError) return this.$message.error(res.msg)
-        this.$message.success('删除成功')
-        this.getTableData()
-        })
-    })
-    },
     // 选中
     onSelectionChange (val) {
-    this.selectedIds = Array.from(val, ({ id }) => id)
-    },
-    // 搜索
-    onSearch () {
-    this.search.page = 1
-    this.getTableData()
+      this.selectedIds = Array.from(val, ({ id }) => id)
     },
     //获取列表数据
     getTableData () {
@@ -124,7 +92,7 @@ methods: {
         ...this.search
     }
     this.$deleteObjectEmptyAttr(params)
-    this.$api.contactUsList(params).then(res => {
+    this.$api.getSignList(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
         this.table.data = res?.data?.data ?? []
         this.table.total = res?.data?.total ?? 0
@@ -137,10 +105,12 @@ data () {
         page: 1,
         pageSize: 10,
         name: '',
-        post: '',
+        createTime: '',
         phone: '',
-        email: '',
-        company: '',
+        idCard: '',
+        workAddress: '',
+        registerLocation: '',
+        activitiesName: '',
         remark: '',
     },
     selectedIds: [],
@@ -150,41 +120,9 @@ data () {
         icon: "export",
         prop: 'delete'
         },
-        {
-        title: "上传文档附件",
-        icon: "add",
-        prop: 'upload'
-        },
     ],
     table: {
-        headerConfig: Object.freeze(
-        [
-            {
-            key: "name",
-            title: "姓名",
-            minWidth: 120
-            },
-            {
-            key: "post",
-            title: "职位",
-            minWidth: 150
-            },
-            {
-            key: "phone",
-            title: "电话",
-            minWidth: 150
-            },
-            {
-            key: "email",
-            title: "邮箱",
-            minWidth: 250
-            },
-            {
-            key: "company",
-            title: "公司名称",
-            minWidth: 250
-            },
-        ]),
+        headerConfig: Object.freeze(HeaderList),
         data: [],
         total: 0
     }

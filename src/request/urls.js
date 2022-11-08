@@ -39,5 +39,4 @@ export const urls = {
     contactUsDelete: '/contactUs/delete', // 删除联系人
     contactUsExportExcel: '/contactUs/exportExcel', // 导出联系人列表
 
-
 }

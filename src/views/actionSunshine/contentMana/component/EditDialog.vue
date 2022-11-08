@@ -7,28 +7,32 @@
     :visible.sync="dialogFormVisible">
     <el-form :model="form.data"
               :rules="form.rules"
-              label-width="50px"
+              label-width="80px"
               label-position="left"
               class="form-wrap"
               ref="form">
-      <el-form-item label="标题"
-                    prop="title">
-        <el-input v-model="form.data.title"
+      <el-form-item label="工程类型"
+                    label-width="110px"
+                    prop="type">
+        <el-radio-group v-model="form.data.type">
+          <el-radio-button :label=0>阳光工程项目</el-radio-button>
+          <el-radio-button :label=1>阳光工程活动</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="是否有报名"
+                    label-width="110px"
+                    v-if="form.data.type===0"
+                    prop="isApply">
+        <el-radio v-model="form.data.isApply" :label=1>有报名</el-radio>
+        <el-radio v-model="form.data.isApply" :label=0>无报名</el-radio>
+      </el-form-item>
+      <el-form-item label="活动名称"
+                    prop="name">
+        <el-input v-model="form.data.name"
                   placeholder="请输入标题"
                   maxlength="50"
                   show-word-limit
                   class="w480"></el-input>
-      </el-form-item>
-      <el-form-item label="描述"
-                    prop="intro">
-        <el-input v-model="form.data.intro"
-                  placeholder="请输入描述"
-                  type="textarea"
-                  rows="4"
-                  maxlength="100"
-                  show-word-limit
-                  class="w480">
-        </el-input>
       </el-form-item>
       <el-form-item label="图片"
                     prop="picture">
@@ -52,11 +56,24 @@
                 v-if="form.data.picture">修改图片</div>
         </el-upload>
       </el-form-item>
-      <el-form-item label="内容"  
-        prop="html">
+      <el-form-item >
+        <el-radio-group v-model="form.data.textType">
+          <el-radio-button label="0">文本</el-radio-button>
+          <el-radio-button label="1">URL链接</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="内容" 
+                    prop="html">
         <tinymce-comment ref="editor"
+                        v-if="form.data.textType==='0'&&dialogFormVisible" 
                         v-model="form.data.html"
                         :height="300" />
+        <el-input v-model="form.data.html"
+                  v-else
+                  placeholder="请输入url链接"
+                  maxlength="50"
+                  show-word-limit
+                  class="w480" />
       </el-form-item>
     </el-form>
     <div style="text-align:center">
@@ -70,6 +87,15 @@
 
 <script>
 import TinymceComment from '@/components/Tinymce'
+
+const defaultFormValue = {
+  type: null,
+  isApply: null,
+  name: '',
+  textType: "0",
+  picture: '',
+  html: ''
+}
 export default {
   name: 'EditDialog',
   components: { TinymceComment },
@@ -81,7 +107,83 @@ export default {
     dialogTitle: {
       type: String,
       default: '',
+    },
+    operationId: {  // 为null代表是新增
+      type: Number,
+      default: null,
+    },
+    defaultForm: {
+      type: Object,
+      default: {
+        type: null,
+        isApply: null,
+        name: '',
+        textType: "0",
+        picture: '',
+        html: ''
+      },
     }
+  },
+  data () {
+    return {
+      cidOptions: [],
+      form: {
+        data: {
+          type: null,
+          isApply: null,
+          name: '',
+          textType: "0",
+          picture: '',
+          html: ''
+        },
+        rules: Object.freeze({
+          type: [
+            { required: true, message: '请选择工程类型', trigger: 'blur' }
+          ],
+          isApply: [
+            { required: true, message: '请选择有无报名', trigger: 'blur' }
+          ],
+          name: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' }
+          ],
+          intro: [
+            { required: true, message: '请输入描述', trigger: 'blur' }
+          ],
+          picture: [
+            { required: true, message: '请上传图片', trigger: 'change' }
+          ],
+          html: [
+            { required: true, message: '请填写内容或链接', trigger: 'change' }
+          ]
+        })
+      },
+
+    }
+  },
+  watch: {
+    'form.data.type': {
+      handler (newVal,oldVal) {
+        if(Number(newVal)===1) {
+          this.form.data.isApply = null;
+        }
+      },
+      immediate: true,
+      deep: true,
+    },
+    defaultForm: {
+      handler (newVal,oldVal) {
+        this.form.data = newVal;
+      },
+      immediate: true,
+      deep: true,
+    },
+    // dialogFormVisible: {
+    //   handler(newVal,oldVal) {
+    //     if(!newVal) {
+    //       this.form.data = defaultFormValue;
+    //     }
+    //   }
+    // }
   },
   methods: {
     // 上传前判断
@@ -108,30 +210,37 @@ export default {
     },
     // 关闭、取消
     onClose () {
-      // 单凡有一个不为空 则进行询问关闭dialog
-      let isNull = Object.values(this.form.data).some(item => item !=='')
-      if(isNull) {
+      // 新增时但凡有一个不为空 则进行询问关闭dialog
+      const curValues = {
+        ...this.form.data,
+        textType: null,
+      };
+      let isNull = Object.values(curValues).some(item => item !=='' && item !==null )
+      // 新增时
+      if(isNull&&this.operationId===null) {
         this.$confirm('确定取消？当前所填内容将会清空！', '温馨提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$refs.form.resetFields()
-          this.$refs.editor.setContent("")
-          this.$emit('onclose')
+          this.resetFormFields();
         }).catch(() => {});
-      } else {
-        this.$refs.form.resetFields()
-        this.$refs.editor.setContent("")
-        this.$emit('onclose')
+        return;
       }
+      this.resetFormFields();
+      this.$emit('onclose');
+    },
+    // 重置表单
+    resetFormFields() {
+      Object.assign(this.form.data,defaultFormValue);
+      this.$refs.editor.setContent("");
+      this.$emit('onclose');
     },
     // 确定
     onConfirm () {
-      console.log(this.form)
-      this.$refs.form.validate((vaild) => {
-        if (vaild) {
-          this.$route.query.id ? this.updateByIdArticle() : this.addArticle()
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+         this.operationId !==null? this.updateByIdArticle() : this.addArticle()
         }
       })
     },
@@ -140,7 +249,7 @@ export default {
       const params = {
         ...this.form.data
       }
-      this.$api.addArticle(params).then(res => {
+      this.$api.addAndEdit(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
         this.successTip('新增成功')
       })
@@ -148,59 +257,19 @@ export default {
     // 编辑
     updateByIdArticle () {
       const params = {
-        ...this.form.data
+        ...this.form.data,
+        id: this.operationId,
       }
-      this.$api.updateByIdArticle(params).then(res => {
+      this.$api.addAndEdit(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
         this.successTip('编辑成功')
       })
     },
     successTip (tip) {
-      this.$message.success(tip)
-      this.onClose()
+      this.$message.success(tip);
+      this.$emit('flushPage');
     },
-    // 新闻资讯id查新闻资讯
-    findByIdArticle (id) {
-      this.$api.findByIdArticle({ id }).then(res => {
-        if (res.isError) return this.$message.error(res.msg)
-        const { title, id, picture, intro, html } = res?.data ?? {}
-        this.form.data = { title, id, picture, intro, html }
-      })
-    }
-
   },
-  data () {
-    return {
-      cidOptions: [],
-      form: {
-        data: {
-          title: '',
-          intro: '',
-          picture: '',
-          html: ''
-        },
-        rules: Object.freeze({
-          title: [
-            { required: true, message: '请输入标题', trigger: 'blur' }
-          ],
-          intro: [
-            { required: true, message: '请输入描述', trigger: 'blur' }
-          ],
-          picture: [
-            { required: true, message: '请上传图片', trigger: 'change' }
-          ],
-          html: [
-            { required: true, message: '请填写内容', trigger: 'change' }
-          ]
-        })
-      },
-
-    }
-  },
-  created () {
-    const id = this.$route.query.id
-    id && this.findByIdArticle(id)
-  }
 }
 </script>
 

@@ -5,12 +5,18 @@
         <div>活动页面配置</div>
         <el-button type="primary" @click="dialogVisible=true">新增</el-button>
       </div>
-      <div class="style-container mb20">
-        <div v-for="(item,index) in searchConditionArr" 
-            :class="{'active': curChecked!==index}" 
-            :key="index"
-            @click="handleCheck(item,index)">
-            <span>{{item.title}}</span>
+      <div class="content-bo">
+        <div class="style-container mb20">
+          <div v-for="(item,index) in searchConditionArr" 
+              :class="{'active': curChecked!==index}" 
+              :key="index"
+              @click="handleCheck(item,index)">
+              <span>{{item.title}}</span>
+          </div>
+        </div>
+        <div v-show="curChecked===0">
+          <span class="sign">只显示报名</span>
+          <el-switch v-model="delivery"></el-switch>
         </div>
       </div>
     </div>
@@ -23,38 +29,42 @@
           >
           <el-image 
             style="width: 100px; height: 100px"
-            :src="item.url" 
-            :preview-src-list="item.srcList">
+            :src="item.picture"
+            :preview-src-list="[item.picture]">
           </el-image>
           <div class="sec-item">
             <div>
               <span>{{item.name}}</span><br/>
-              <span>{{item.time}}</span>
+              <span>{{item.createTime}}</span>
             </div>
             <div>
-              <span>浏览：{{item.lNum}}</span>
-              <span>申请人数：{{item.pNum}}</span>
+              <span style="color: #666666;">浏览：<span style="color: #333333;">{{item.clicks}}</span></span>
+              <span style="margin-left: 40px;color: #666666;">申请人数：<span style="color: #333333;">{{item.applicantNum}}</span></span>
             </div>
           </div>
           <div class="thi-item">
-            <div :style="{'color':item.isSun?'':'#FFA849'}">{{item.isSun?'阳光工程项目':'阳光工程活动'}}</div>
+            <div :style="{'color':item.type === 0?'':'#FFA849'}">{{item.type === 0?'阳光工程项目':'阳光工程活动'}}</div>
             <div>
-              <span @click="handleEdit">编辑</span>
-              <span @click="handleDel">删除</span>
+              <span @click="handleEdit(item.id)">编辑</span>
+              <span @click="handleDel(item.id)">删除</span>
             </div>
           </div>
         </li>
       </ul>
     </div>
-    <pagination :total="total"
+    <pagination 
+      :total="search.total"
       :pageSizes="[3,6,18,72]"
       :page.sync="search.page"
       :limit.sync="search.pageSize"
       @pagination="getTableData" />
 
     <edit-dialog
-      :dialogFormVisible="dialogVisible" 
+      :dialogFormVisible="dialogVisible"
+      :defaultForm="defaultForm"
+      :operationId="currentId"
       @onclose="handleClose"
+      @flushPage="handleFlush"
       :dialogTitle = dialogTitle
       /> 
   </div>
@@ -72,8 +82,10 @@ export default {
       search: {
         page: 1,
         pageSize: 3,
-        title: ''
+        title: '',
+        total: 6,
       },
+      delivery: false,
       selectedIds: [],
       searchCondition: [
         {
@@ -84,90 +96,17 @@ export default {
           title: "阳光工程活动",
           prop: 'delete'
         },
-        {
-          title: "有报名",
-          prop: 'add'
-        },
-        {
-          title: "未报名",
-          prop: 'delete'
-        },
       ],
-      dataList: [{
-        time: '2016-05-02',
-        name: '北京站',
-        lNum: 1234,
-        pNum: 1234,
-        isSun: true,
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        srcList: [
-          'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-          'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-        ]
-      }, {
-        time: '2016-05-04',
-        name: '北京站',
-        lNum: 1234,
-        pNum: 1234,
-        isSun: false,
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        srcList: [
-          'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-          'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-        ],
-      }, {
-        time: '2016-05-01',
-        name: '北京站',
-        lNum: 1234,
-        pNum: 1234,
-        isSun: true,
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        srcList: [
-          'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-          'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-        ]
-      }, {
-        time: '2016-05-04',
-        name: '北京站',
-        lNum: 1234,
-        pNum: 1234,
-        isSun: false,
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        srcList: [
-          'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-          'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-        ],
-      }, {
-        time: '2016-05-04',
-        name: '北京站',
-        lNum: 1234,
-        pNum: 1234,
-        isSun: false,
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        srcList: [
-          'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-          'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-        ],
-      }, {
-        time: '2016-05-04',
-        name: '北京站',
-        lNum: 1234,
-        pNum: 1234,
-        isSun: false,
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        srcList: [
-          'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-          'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-        ],
-      }],
+      dataList: [],
       curChecked: -1,
       dialogVisible: false,
-      total: 6,
       dialogTitle: '新增',
+      currentId: null, // 当前操作的项
+      defaultForm: {}
     }
   },
   created () {
-    // this.getTableData()
+    this.getTableData({page: 1, pageSize: 3});
   },
   mounted () {
   },
@@ -176,29 +115,72 @@ export default {
       const { searchCondition, curChecked } = this
       // index为1 即阳光工程活动时没有 是否有报名的按钮
       return ![-1,1].includes(curChecked)? searchCondition:searchCondition.slice(0,2)
-    }
+    },
+  },
+  watch: {
+    curChecked (newVal, oldVal) {
+      const data = {
+        page: this.search.page, 
+        pageSize: this.search.pageSize,
+        type: newVal === -1?null:newVal,
+      }
+      this.getTableData(data);
+    },
+    delivery (newVal, oldVal) {
+      const data = {
+        page: this.search.page, 
+        pageSize: this.search.pageSize,
+        type: this.curChecked === -1?null: this.curChecked,
+        isApply: newVal?1:null
+      }
+      this.getTableData(data);
+    },
   },
   methods: {
+    // 刷新列表
+    handleFlush() {
+      this.dialogTitle = '新增'
+      this.dialogVisible = false;
+      this.$api.getContentList({...this.search}).then(res => {
+        const { data, page, pageSize, total } = res.data;
+        this.dataList = data;
+        Object.assign(this.search, { page, pageSize, total });
+      })
+    },
     handleClose() {
       this.dialogTitle = '新增'
-      this.dialogVisible = false
+      this.dialogVisible = false;
     },
     // 编辑
-    handleEdit() {
-      this.dialogTitle = '编辑'
-      this.dialogVisible = true 
+    async handleEdit(val) {
+      this.dialogTitle = '编辑';
+      await this.findDataInfoById(val);
+      this.currentId = val;
+      this.dialogVisible = true;
+    },
+    // 根据Id查询回显
+    findDataInfoById (id) {
+      this.$api.findById(id).then(res => {
+        if (res.isError) return this.$message.error(res.msg)
+        const { name, id, picture, type, html, isApply, textType } = res?.data ?? {}
+        this.defaultForm = { name, id, picture, type, html, isApply, textType }
+      })
     },
     // 删除
-    handleDel() {
+    handleDel(val) {
       this.$confirm('确定删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning' 
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+        this.$api.deleteById(val).then(res => {
+          if (res.isError) return this.$message.error(res.msg)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.getTableData({...this.search});
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -207,13 +189,16 @@ export default {
       });
     },
     // 获取列表数据
-    getTableData(val) {
-      console.log(val)
+    getTableData(data) {
+      this.$api.getContentList(data).then(res => {
+        const { data, page, pageSize, total } = res.data;
+        this.dataList = data;
+        Object.assign(this.search, { page, pageSize, total });
+      })
     },
     // 筛选
     handleCheck(item,index) {
-      this.curChecked = index;
-      console.log(index)
+      this.curChecked = this.curChecked === index ? -1 : index;
     },
     // 新增、编辑
     onAdvantage (type, id) {
@@ -327,7 +312,6 @@ $pubMargin: 20px;
     justify-content: space-between;
 
     div {
-      width: 108px;
       height: 22px;
       font-size: 18px;
       font-family: PingFangSC-Semibold, PingFang SC;
@@ -370,7 +354,7 @@ $pubMargin: 20px;
         & div:first-child  {
           & span:nth-child(1) {
             font-size: 24px;
-            font-family: PingFang-SC-Bold, PingFang-SC;
+            font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
             font-weight: bold;
             color: #333333;
             & + br + span {
@@ -380,9 +364,6 @@ $pubMargin: 20px;
               font-weight: 400;
               color: #999999;
             }
-          }
-          & + div span:last-child {
-            margin-left: 40px;
           }
         }
       }
@@ -414,6 +395,20 @@ $pubMargin: 20px;
         }
       }
     }
+  }
+}
+.content-bo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  span {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #4D7CFE;
+  }
+  .sign {
+    margin-right: 10px;
   }
 }
  ::v-deep .el-dialog {
