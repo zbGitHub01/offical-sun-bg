@@ -16,16 +16,16 @@
                     label-width="110px"
                     prop="type">
         <el-radio-group v-model="form.data.type">
-          <el-radio-button :label=0>阳光工程项目</el-radio-button>
-          <el-radio-button :label=1>阳光工程活动</el-radio-button>
+          <el-radio-button label="0">阳光工程项目</el-radio-button>
+          <el-radio-button label="1">阳光工程活动</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="是否有报名"
                     label-width="110px"
-                    v-if="form.data.type===0"
+                    v-if="Number(form.data.type)===0"
                     prop="isApply">
-        <el-radio v-model="form.data.isApply" :label=1>有报名</el-radio>
-        <el-radio v-model="form.data.isApply" :label=0>无报名</el-radio>
+        <el-radio v-model="form.data.isApply" label="1">有报名</el-radio>
+        <el-radio v-model="form.data.isApply" label="0">无报名</el-radio>
       </el-form-item>
       <el-form-item label="活动名称"
                     prop="name">
@@ -90,8 +90,8 @@
 import TinymceComment from '@/components/Tinymce'
 
 const defaultFormValue = {
-  type: null,
-  isApply: null,
+  type: "0",
+  isApply: "1",
   name: '',
   textType: "0",
   picture: '',
@@ -116,8 +116,8 @@ export default {
     defaultForm: {
       type: Object,
       default: {
-        type: null,
-        isApply: null,
+        type: "0",
+        isApply: "1",
         name: '',
         textType: "0",
         picture: '',
@@ -130,8 +130,8 @@ export default {
       cidOptions: [],
       form: {
         data: {
-          type: null,
-          isApply: null,
+          type: "0",
+          isApply: "1",
           name: '',
           textType: "0",
           picture: '',
@@ -178,13 +178,12 @@ export default {
       immediate: true,
       deep: true,
     },
-    // dialogFormVisible: {
-    //   handler(newVal,oldVal) {
-    //     if(!newVal) {
-    //       this.form.data = defaultFormValue;
-    //     }
-    //   }
-    // }
+    dialogFormVisible: {
+      handler(newVal,oldVal) {
+        this.form.data = Object.assign({},defaultFormValue);
+      },
+      immediate: true,
+    }
   },
   methods: {
     // 上传前判断
@@ -213,8 +212,9 @@ export default {
     onClose () {
       // 新增时但凡有一个不为空 则进行询问关闭dialog
       const curValues = {
-        ...this.form.data,
-        textType: null,
+        name: this.form.data.name,
+        picture: this.form.data.picture,
+        html: this.form.data.html,
       };
       let isNull = Object.values(curValues).some(item => item !=='' && item !==null )
       // 新增时
@@ -229,12 +229,12 @@ export default {
         return;
       }
       this.resetFormFields();
-      this.$emit('onclose');
     },
     // 重置表单
     resetFormFields() {
       Object.assign(this.form.data,defaultFormValue);
-      this.$refs.editor.setContent("");
+      this.$refs.form.resetFields();
+      !!this.$refs.editor? this.$refs.editor.setContent(""):'';
       this.$emit('onclose');
     },
     // 确定
