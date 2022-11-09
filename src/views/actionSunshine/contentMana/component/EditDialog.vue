@@ -22,10 +22,14 @@
       </el-form-item>
       <el-form-item label="是否有报名"
                     label-width="110px"
-                    v-if="Number(form.data.type)===0"
+                    v-show="Number(form.data.type)===0"
                     prop="isApply">
-        <el-radio v-model="form.data.isApply" label="1">有报名</el-radio>
-        <el-radio v-model="form.data.isApply" label="0">无报名</el-radio>
+          <el-radio-group v-model="form.data.isApply">
+            <el-radio-button label="1">有报名</el-radio-button>
+            <el-radio-button label="0">无报名</el-radio-button>
+          </el-radio-group>
+        <!-- <el-radio v-model="form.data.isApply" label="1">有报名</el-radio>
+        <el-radio v-model="form.data.isApply" label="0">无报名</el-radio> -->
       </el-form-item>
       <el-form-item label="活动名称"
                     prop="name">
@@ -162,15 +166,15 @@ export default {
     }
   },
   watch: {
-    'form.data.type': {
-      handler (newVal,oldVal) {
-        if(Number(newVal)===1) {
-          this.form.data.isApply = null;
-        }
-      },
-      immediate: true,
-      deep: true,
-    },
+    // 'form.data.type': {
+    //   handler (newVal,oldVal) {
+    //     if(Number(newVal)===1) {
+    //       this.form.data.isApply = null;
+    //     }
+    //   },
+    //   immediate: true,
+    //   deep: true,
+    // },
     defaultForm: {
       handler (newVal,oldVal) {
         this.form.data = newVal;
