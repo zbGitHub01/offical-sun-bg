@@ -61,24 +61,12 @@
                 v-if="form.data.picture">修改图片</div>
         </el-upload>
       </el-form-item>
-      <el-form-item >
-        <el-radio-group v-model="form.data.textType">
-          <el-radio-button label="0">文本</el-radio-button>
-          <el-radio-button label="1">URL链接</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item label="内容" 
                     prop="html">
         <tinymce-comment ref="editor"
-                        v-if="form.data.textType==='0'&&dialogFormVisible" 
+                        v-if="dialogFormVisible" 
                         v-model="form.data.html"
                         :height="300" />
-        <el-input v-model="form.data.html"
-                  v-else
-                  placeholder="请输入url链接"
-                  maxlength="50"
-                  show-word-limit
-                  class="w480" />
       </el-form-item>
     </el-form>
     <div style="text-align:center">
@@ -97,7 +85,6 @@ const defaultFormValue = {
   type: "0",
   isApply: "1",
   name: '',
-  textType: "0",
   picture: '',
   html: ''
 }
@@ -123,7 +110,6 @@ export default {
         type: "0",
         isApply: "1",
         name: '',
-        textType: "0",
         picture: '',
         html: ''
       },
@@ -137,7 +123,6 @@ export default {
           type: "0",
           isApply: "1",
           name: '',
-          textType: "0",
           picture: '',
           html: ''
         },

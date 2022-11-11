@@ -32,7 +32,6 @@
             <el-table-column property="enable"
                             align="center"
                             label="备注"
-                            fixed="right"
                             width="150px">
               <template slot-scope="scope">
                   <el-popconfirm
