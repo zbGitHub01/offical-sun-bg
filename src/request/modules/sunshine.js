@@ -51,3 +51,12 @@ export function exportExcel(data) {
     data,
   })
 }
+
+// 获取活动标题筛选列表
+export function getHomeActivitiesInfo(data) {
+  return request({
+    url: '/activitiesConfig/getHomeActivitiesInfo',
+    method: 'post',
+    data,
+  })
+}

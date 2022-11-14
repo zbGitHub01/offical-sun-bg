@@ -10,7 +10,17 @@
             <div class="title_warp">{{item.title}}</div>
             </div>
         </div>
+        <div>
+          <el-select v-model="activitiesId" clearable placeholder="请选择">
+            <el-option
+              v-for="item in activitiesList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </div>
+      </div>
         <template>
         <el-table border
                     @selection-change="onSelectionChange"
@@ -58,6 +68,15 @@ import { HeaderList } from './tableHeader/index.js'
 export default {
 name: 'index',
 components: { Pagination },
+watch: {
+  activitiesId(newVal,oldVal) {
+    const data = {
+      ...this.search,
+      activitiesId: newVal,
+    };
+    newVal===''? this.getTableData(this.search):this.getTableData(data);
+  }
+},
 methods: {
     // 编辑
     onEdit (type, data) {
@@ -74,44 +93,39 @@ methods: {
         param: { ...this.search }
     }
     this.$api.exportExcel(exportParams).then(res => {
-        if (res.isError) return this.$message.error(res.msg)
+      if (res.isError) return this.$message.error(res.msg)
         window.open(res.data.url)
         this.$message.success('导出成功')
-    })
-
-
+      })
+    },
+    // 获取活动标题筛选下拉列表
+    getActivitiesList() {
+      this.$api.getHomeActivitiesInfo({isApply: 1,type: 0}).then(res => {
+        if (res.code!==200) return this.$message.error(res.msg);
+        this.activitiesList = res?.data ?? [] ;
+      })
     },
     // 选中
     onSelectionChange (val) {
       this.selectedIds = Array.from(val, ({ id }) => id)
     },
     //获取列表数据
-    getTableData () {
-    const params = {
-        ...this.search
-    }
-    this.$deleteObjectEmptyAttr(params)
-    this.$api.getSignList(params).then(res => {
+    getTableData (data) {
+      this.$api.getSignList(data).then(res => {
         if (res.isError) return this.$message.error(res.msg)
         this.table.data = res?.data?.data ?? []
         this.table.total = res?.data?.total ?? 0
-    })
+      })
     },
 },
 data () {
     return {
     search: {
-        page: 1,
-        pageSize: 10,
-        name: '',
-        createTime: '',
-        phone: '',
-        idCard: '',
-        workAddress: '',
-        registerLocation: '',
-        activitiesName: '',
-        remark: '',
+      page: 1,
+      pageSize: 10,
     },
+    activitiesList: [],
+    activitiesId: null, // 标题筛选id
     selectedIds: [],
     searchCondition: [
         {
@@ -129,7 +143,8 @@ data () {
     }
 },
 created () {
-    this.getTableData()
+    this.getTableData({ page: 1,pageSize: 10,});
+    this.getActivitiesList();
 }
 }
 </script>
@@ -137,6 +152,8 @@ created () {
 <style lang='scss' scoped>
 .mb20 {
 margin-bottom: 20px !important;
+display: flex;
+justify-content: space-between;
 }
 .mr20 {
 margin-right: 20px !important;
