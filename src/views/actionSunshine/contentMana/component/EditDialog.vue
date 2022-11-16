@@ -16,8 +16,8 @@
                     label-width="110px"
                     prop="type">
         <el-radio-group v-model="form.data.type">
-          <el-radio-button label="0">阳光工程项目</el-radio-button>
-          <el-radio-button label="1">阳光工程活动</el-radio-button>
+          <el-radio-button label="0">阳光工程活动</el-radio-button>
+          <el-radio-button label="1">阳光工程案例</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="是否有报名"

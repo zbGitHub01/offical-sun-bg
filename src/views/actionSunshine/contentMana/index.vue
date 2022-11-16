@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class="thi-item">
-            <div :style="{'color':item.type === 0?'':'#FFA849'}">{{item.type === 0?'阳光工程项目':'阳光工程活动'}}</div>
+            <div :style="{'color':item.type === 0?'':'#FFA849'}">{{item.type === 0?'阳光工程活动':'阳光工程案例'}}</div>
             <div>
               <span @click="handleEdit(item.id)">编辑</span>
               <span @click="handleDel(item.id)">删除</span>
@@ -89,11 +89,11 @@ export default {
       selectedIds: [],
       searchCondition: [
         {
-          title: "阳光工程项目",
+          title: "阳光工程活动",
           prop: 'add'
         },
         {
-          title: "阳光工程活动",
+          title: "阳光工程案例",
           prop: 'delete'
         },
       ],
@@ -113,7 +113,7 @@ export default {
   computed: {
     searchConditionArr() {
       const { searchCondition, curChecked } = this
-      // index为1 即阳光工程活动时没有 是否有报名的按钮
+      // index为1 即阳光工程案例时没有 是否有报名的按钮
       return ![-1,1].includes(curChecked)? searchCondition:searchCondition.slice(0,2)
     },
   },
