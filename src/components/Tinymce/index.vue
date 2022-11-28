@@ -231,6 +231,72 @@ export default {
         //     console.log(err);
         //   });
         // },
+        
+        // 媒体上传
+        file_picker_callback: (callback, value, meta) => {
+          const _tath = this
+          var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4'
+          var materialType = ''
+          switch (meta.filetype) {
+            case 'image':
+              filetype = '.jpg, .jpeg, .png, .gif'
+              materialType = '1'
+              break
+            case 'media':
+              filetype = '.mp3, .mp4'
+              break
+            case 'file':
+            default:
+          } 
+          var input = document.createElement('input')
+          input.setAttribute('type', 'file')
+          input.setAttribute('accept', filetype)
+          input.click()
+          input.onchange = function() {
+            var file = this.files[0]
+            if (file.type == 'video/mp4' || file.type.indexOf('video') != -1) {
+              materialType = '3'
+            } else if (file.type == 'audio/mpeg' || file.type == 'audio/mp3' || file.type.indexOf('audio') != -1) {
+              materialType = '2'
+            }
+            if (materialType == '1') {
+              // 图片上传
+              const fileData = new FormData()
+              fileData.append('file', file)
+              axios.post('/api/upload/uploadFile', fileData, {
+                headers: {
+                  token: getToken()
+                }
+              })
+              .then(response => {
+                const res = response.data
+                if (res.code === 200) {
+                  callback(res.data)
+                } else {
+                  failure('上传失败！')
+                }
+              })
+            } else {
+              // 音频、视频上传
+              const fileData = new FormData()
+              fileData.append('file', file)
+              fileData.append('materialType', materialType)
+              axios.post('/api/upload/uploadFile', fileData, {
+                headers: {
+                  token: getToken()
+                }
+              })
+              .then(response => {
+                const res = response.data
+                if (res.code === 200) {
+                  callback(res.data)
+                } else {
+                  failure('上传失败！')
+                }
+              })
+            }
+        }
+      }
       })
     },
     destroyTinymce () {
