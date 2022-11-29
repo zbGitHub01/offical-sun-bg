@@ -239,6 +239,7 @@ export default {
       const params = {
         ...this.form.data
       }
+      if(Number(params.type)===1) params.isApply = ''
       this.$api.addAndEdit(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
         this.successTip('新增成功')
@@ -250,6 +251,7 @@ export default {
         ...this.form.data,
         id: this.operationId,
       }
+      if(Number(params.type)===1) params.isApply = ''
       this.$api.addAndEdit(params).then(res => {
         if (res.isError) return this.$message.error(res.msg)
         this.successTip('编辑成功')
