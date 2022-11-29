@@ -19,6 +19,7 @@ import editorImage from './components/EditorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import load from './dynamicLoadScript'
+import { Loading } from 'element-ui';
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
 const tinymceCDN = 'https://fastly.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
@@ -278,6 +279,14 @@ export default {
               })
             } else {
               // 音频、视频上传
+              // 上传loading
+              const loading = _tath.$loading({
+                lock: true,
+                text: '上传中...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+              });
+              document.getElementsByClassName('is-fullscreen')[0].style.zIndex = 65537
               const fileData = new FormData()
               fileData.append('file', file)
               fileData.append('materialType', materialType)
@@ -289,6 +298,7 @@ export default {
               .then(response => {
                 const res = response.data
                 if (res.code === 200) {
+                  loading.close();
                   callback(res.data)
                 } else {
                   failure('上传失败！')
