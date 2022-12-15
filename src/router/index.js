@@ -106,6 +106,14 @@ export const constantRoutes = [{
                     import ("@/views/advertising/type/index"),
                 name: "Type",
                 meta: { title: "广告类别" }
+            },
+            {
+                path: "video",
+                // access: 'mediate_my_case',
+                component: () =>
+                    import ("@/views/videoConfig/index"),
+                name: "Video",
+                meta: { title: "宣传视频" }
             }
         ]
     },

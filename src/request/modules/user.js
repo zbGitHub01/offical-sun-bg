@@ -112,3 +112,57 @@ export function uploadFile(config) { // 上传图片
         })
     })
 }
+
+
+// ——————————————————  上传视频接口
+export function uploadVideo(config) { // 上传视频
+  const temConfig = {
+    headers: {
+        token: getToken()
+    },
+    onUploadProgress: progressEvent =>{
+      if (progressEvent.lengthComputable) {   //是否存在进度
+        var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+        progressBar = percentCompleted
+        console.log((progressEvent.loaded * 100) / progressEvent.total)
+        // item.fileUploadPercent=percentCompleted;
+      }
+    },
+  }
+  const formData = new FormData()
+  formData.append('file', config.file)
+  const url = '/api/upload/uploadFile'
+  return new Promise((resolve, reject) => {
+      axios.post(url, formData, temConfig).then(res => {
+          const resData = res.data
+          if (res.status === 200) {
+              if (resData.code === 103) {
+                  MessageBox.confirm(
+                      '您的登录已过期，请重新登录', {
+                          confirmButtonText: '重新登录',
+                          showClose: false,
+                          center: true,
+                          showCancelButton: false,
+                          closeOnClickModal: false,
+                          closeOnPressEscape: false,
+                          type: 'warning'
+                      }
+                  ).then(() => {
+                      removeToken()
+                      removeRole()
+                      router.push({ path: '/login' })
+                  })
+                  return
+              }
+              if (resData.code === 200) {
+                  const filePaths = resData.data
+                  resolve(filePaths)
+              } else {
+                  Message.error('资源上传失败，请稍后重新上传')
+              }
+          } else {
+              Message.error('资源上传失败，请稍后重新上传')
+          }
+      })
+  })
+}

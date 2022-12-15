@@ -12,7 +12,7 @@
       </el-option>
     </el-select>
     <div class="style-container mb20">
-      <template v-for="(item,index) in searchCondition">
+      <div v-for="(item,index) in searchCondition">
         <div class="item_warp"
              :key="index"
              @click="onAdvantage(item.prop)">
@@ -21,7 +21,7 @@
           </div>
           <div class="title_warp">{{item.title}}</div>
         </div>
-      </template>
+      </div>
     </div>
     <template>
       <el-table border
@@ -32,7 +32,7 @@
                          align="center"
                          fixed="left"
                          width="50" />
-        <template v-for="(item, index) in table.headerConfig">
+        <div v-for="(item, index) in table.headerConfig">
           <div :key="index">
             <el-table-column v-if="item.key === 'picture'"
                              :property="item.key"
@@ -54,7 +54,7 @@
                              :width="item.width"
                              :min-width="item.minWidth" />
           </div>
-        </template>
+        </div>
         <el-table-column property="enable"
                          align="center"
                          label="操作"
@@ -196,7 +196,7 @@ export default {
   created () {
     this.findByAllAdvantageCategory()
     this.getTableData()
-  }
+  },
 }
 </script>
 
