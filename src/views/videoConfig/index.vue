@@ -123,6 +123,10 @@ export default {
       })
     },
     handleDel () {
+      if (!this.isHaveData) {
+        this.$message('当前无数据可删除！')
+        return
+      }
       this.$confirm('确定全部删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
