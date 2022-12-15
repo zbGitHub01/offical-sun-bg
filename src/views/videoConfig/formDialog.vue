@@ -170,7 +170,6 @@ export default {
     },
     // 取消上传视频
     handleCancelUpload() {
-      console.log(333)
       source.cancel('Upload canceled by the current user.');
       // 重新生成source
       this.createNewSource();
@@ -262,9 +261,6 @@ export default {
           Message.error('资源上传失败，请稍后重新上传')
         }
       }).catch(thrown => {
-        console.log(thrown)
-        console.log(axios.isCancel())
-        console.log(axios.isCancel(thrown))
         // 取消视频上传
         if (axios.isCancel(thrown)) {
           this.progressBar = 0

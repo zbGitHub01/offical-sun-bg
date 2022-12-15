@@ -120,7 +120,6 @@ export default {
         if (dataArr.length < 1) return;
         this.form = Object.assign(this.form,dataArr[0]); // 肯定只有一条数据
         this.isHaveData = true; // 标识为有数据
-        console.log('现在表单数据',this.form)
       })
     },
     handleDel () {
