@@ -231,6 +231,7 @@ export default {
       const url = '/api/upload/uploadFile'
       axios.post(url, formData, temConfig).then(res => {
         const resData = res.data
+        console.log('status',res)
         if (res.status === 200) {
           if (resData.code === 103) {
             MessageBox.confirm(
@@ -246,7 +247,7 @@ export default {
               ).then(() => {
                 removeToken()
                 removeRole()
-                router.push({ path: '/login' })
+                this.$router.push({ path: '/login' })
             })
             return
           }
@@ -267,7 +268,9 @@ export default {
           this.loading = false
           console.log('Request canceled', thrown.message);
         } else {
-          console.log('中断请求出错，请联系管理员。')
+          this.progressBar = 0
+          this.loading = false
+          console.log('出现错误，请联系管理员。',thrown)
         }
       });
     },
