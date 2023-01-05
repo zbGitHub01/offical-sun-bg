@@ -41,7 +41,7 @@
                       :preview-src-list="[form.phonePicture]"
                       class="phonePicture-img">
             </el-image>
-            <div style="color: red">(注：当前显示的为实际应用在网页上的效果，请确认您上传的图片尺寸符合您的要求)</div>
+            <div style="color: red">(注：当前显示的为实际应用在手机上的效果，请确认您上传的图片尺寸符合您的要求)</div>
           </div>
         
           <span class="nullText" v-else>暂无</span>
